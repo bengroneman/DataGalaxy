@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-test('index page has expected h1', async ({ page }) => {
-	await page.goto('/');
-	expect(await page.textContent('h1')).toBe('Welcome to SvelteKit');
+test('new image modal shown when button clicked', async ({ page }) => {
+	await page.locator('#newImageButton').click();
+
+	const modal = await page.locator('#newImageModal');
+	expect(modal).toBeVisible();
 });
