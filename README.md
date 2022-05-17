@@ -34,7 +34,7 @@ python3 -m venv env
 source env/bin/activate 
 ```
 ```bash
-pip install pytest "fastapi[all]" python-multipart sqlalchemy
+pip install pytest "fastapi[all]" python-multipart sqlalchemy databases aiofiles
 ```
 ```bash
 pytest

@@ -7,6 +7,9 @@ node_modules
 .env.*
 !.env.example
 
+*.db
+assets/
+
 .idea
 .ipynb_checkpoints
 .mypy_cache
