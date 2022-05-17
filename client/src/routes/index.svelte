@@ -1,5 +1,26 @@
 <script>
 	let modalOpen = false;
+	async function handleSubmit() {
+		event.preventDefault();
+		const form = this;
+		const data = new FormData(form);
+		if (document.querySelector('#image').value === '') {
+			alert('Please attach an image');
+			return;
+		}
+		const response = await fetch('http://localhost:8000/api/images/', {
+			method: 'POST',
+			body: data
+		});
+		const parsed_response = await response.json();
+		if (parsed_response.hasOwnProperty('error')) {
+			form.reset();
+			alert(parsed_response.error);
+		} else {
+			form.reset();
+			alert('Image uploaded successfully');
+		}
+	}
 </script>
 
 {#if modalOpen}
@@ -29,13 +50,7 @@
 				>
 					<div>
 						<div class="mt-3 text-center sm:mt-5">
-							<form
-								name="newImageForm"
-								action="http://localhost:8000/api/images/"
-								target="_blank"
-								method="POST"
-								enctype="multipart/form-data"
-							>
+							<form name="newImageForm" id="newImageForm" on:submit={handleSubmit}>
 								<div class="space-y-8 divide-y divide-gray-200">
 									<div>
 										<div>

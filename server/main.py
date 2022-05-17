@@ -1,12 +1,12 @@
 from typing import List, Optional
 
 from fastapi import FastAPI, File, Form, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 
 import databases, aiofiles, sqlalchemy
 
 from pydantic import BaseModel
 
-# SQLAlchemy specific code, as with any other app
 DATABASE_URL = "sqlite:///./core.db"
 
 database = databases.Database(DATABASE_URL)
@@ -36,6 +36,20 @@ class Image(BaseModel):
 
 app = FastAPI()
 
+origins = [
+    'http://localhost:8000',
+    'http://localhost:3000',
+    'http://localhost',
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.on_event("startup")
 async def startup():
@@ -55,11 +69,16 @@ async def read_images():
 
 @app.post("/api/images/", response_model=Image)
 async def create_image(image: UploadFile = File(...)):
+    if image is None:
+        return {"error": "No file uploaded"}
+
+    if not image.filename.lower().endswith((".jpg", ".png", ".gif")):
+        return {"error": "Only JPG, PNG and GIF files are allowed"}
+
     async with aiofiles.open(f"./assets/{image.filename}", "wb") as out_image:
         while content := await image.read(1024):
             await out_image.write(content)
 
     query = images.insert().values(name=image.filename, mimetype=image.content_type)
-    print(query)
     last_record_id = await database.execute(query)
     return {"id": last_record_id, "name": image.filename, "mimetype": image.content_type}
