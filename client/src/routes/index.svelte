@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import PreLoadImage from '../components/PreLoadImage.svelte';
+	import { env } from '../lib/env.js';
 
 	let imagesAvailable = [];
 	let modalOpen = false;
@@ -23,7 +24,8 @@
 			alert('Please attach an image');
 			return;
 		}
-		const baseUrl = process.env.MODE === 'production' ? 'http://164.90.152.35/' : 'http://localhost:8000/';
+		import.meta.env.MODE
+		const baseUrl = env.mode === 'production' ? 'http://164.90.152.35/' : 'http://localhost:8000/';
 		const response = await fetch(`${baseUrl}api/images/`, {
 			method: 'POST',
 			body: data

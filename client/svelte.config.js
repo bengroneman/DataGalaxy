@@ -10,7 +10,7 @@ const config = {
 		hydratable: true
 	},
 	preprocess: preprocess({
-		replace: [["process.env.MODE", process.env.MODE]],
+		replace: [["process.env.VITE_MODE", process.env.VITE_MODE]],
 	}),
 	kit: {
 		adapter: adapter(),
@@ -18,7 +18,10 @@ const config = {
 		prerender: {
 			default: true
 		}
-	}
+		plugins: [
+			replace
+		]
+	},
 };
 
 export default config;
