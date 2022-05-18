@@ -64,7 +64,12 @@
 				>
 					<div>
 						<div class="mt-3 text-center sm:mt-5">
-							<form class="new-image-form" name="newImageForm" id="newImageForm" on:submit={handleSubmit}>
+							<form
+								class="new-image-form"
+								name="newImageForm"
+								id="newImageForm"
+								on:submit={handleSubmit}
+							>
 								<div class="space-y-8 divide-y divide-gray-200">
 									<div>
 										<div>
@@ -97,17 +102,11 @@
 														<div class="flex text-sm text-gray-600">
 															<label
 																for="image"
-																class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+																class="file-input relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
 															>
 																<span>Upload a file</span>
-																<input
-																  id="image"
-																  name="image"
-																  type="file"
-																  class="file-input sr-only"
-																/>
+																<input id="image" name="image" type="file" class="sr-only" />
 															</label>
-															<p class="pl-1">or drag and drop</p>
 														</div>
 														<p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
 													</div>
