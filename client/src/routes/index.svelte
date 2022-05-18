@@ -1,5 +1,20 @@
 <script>
+	import { onMount } from 'svelte';
+	import PreLoadImage from '../components/PreLoadImage.svelte';
+
+	let imagesAvailable = [];
 	let modalOpen = false;
+
+	onMount(async () => {
+		const response = await fetch('http://localhost:8000/api/images/', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		imagesAvailable = await response.json();
+	});
+
 	async function handleSubmit() {
 		event.preventDefault();
 		const form = this;
@@ -14,10 +29,9 @@
 		});
 		const parsed_response = await response.json();
 		if (parsed_response.hasOwnProperty('error')) {
-			form.reset();
 			alert(parsed_response.error);
 		} else {
-			form.reset();
+			window.location.reload(true);
 			alert('Image uploaded successfully');
 		}
 	}
@@ -50,7 +64,7 @@
 				>
 					<div>
 						<div class="mt-3 text-center sm:mt-5">
-							<form name="newImageForm" id="newImageForm" on:submit={handleSubmit}>
+							<form class="new-image-form" name="newImageForm" id="newImageForm" on:submit={handleSubmit}>
 								<div class="space-y-8 divide-y divide-gray-200">
 									<div>
 										<div>
@@ -86,7 +100,12 @@
 																class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
 															>
 																<span>Upload a file</span>
-																<input id="image" name="image" type="file" class="sr-only" />
+																<input
+																  id="image"
+																  name="image"
+																  type="file"
+																  class="file-input sr-only"
+																/>
 															</label>
 															<p class="pl-1">or drag and drop</p>
 														</div>
@@ -100,7 +119,7 @@
 								<div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
 									<button
 										type="submit"
-										class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
+										class="save-image w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
 										>Save</button
 									>
 									<button
@@ -135,14 +154,18 @@
 			d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
 		/>
 	</svg>
-	<h3 class="mt-2 text-sm font-medium text-gray-900">No images</h3>
+	<h3 class="mt-2 text-md font-semibold text-gray-900">
+		<span class="underline decoration-2 decoration-sky-500"
+			>{imagesAvailable.length >= 1 ? imagesAvailable.length : 'No'}</span
+		> images
+	</h3>
 	<p class="mt-1 text-sm text-gray-500">Get started by adding a new image.</p>
 	<div class="mt-6">
 		<button
 			type="button"
 			on:click={() => (modalOpen = true)}
 			id="newImageButton"
-			class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+			class="open-modal inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 		>
 			<!-- Heroicon name: solid/plus -->
 			<svg
@@ -160,5 +183,13 @@
 			</svg>
 			Add Image
 		</button>
+	</div>
+	<div class="pt-12 mt-12">
+		<h2 class="text-2xl">Images</h2>
+		<div class="grid lg:grid-cols-6 xl:grid-cols-8 md:grid-cols-4 sm:grid-cols-2">
+			{#each imagesAvailable as image}
+				<PreLoadImage {image} />
+			{/each}
+		</div>
 	</div>
 </div>
