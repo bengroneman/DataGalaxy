@@ -23,7 +23,8 @@
 			alert('Please attach an image');
 			return;
 		}
-		const response = await fetch('http://localhost:8000/api/images/', {
+		const baseUrl = process.env.MODE === 'production' ? 'http://164.90.152.35/' : 'http://localhost:8000/';
+		const response = await fetch(`${baseUrl}api/images/`, {
 			method: 'POST',
 			body: data
 		});

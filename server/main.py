@@ -40,13 +40,15 @@ origins = [
     'http://localhost:8000',
     'http://localhost:3000',
     'http://localhost',
+    'https://elaborate-pastelito-70d2ac.netlify.app',
+    'http://elaborate-pastelito-70d2ac.netlify.app',
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
