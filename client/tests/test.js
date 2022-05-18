@@ -1,8 +1,13 @@
 import { expect, test } from '@playwright/test';
 
-test('new image modal shown when button clicked', async ({ page }) => {
-	await page.locator('#newImageButton').click();
+test('adding a PNG is successful', async ({ page, request }) => {
+	await page.goto('/');
 
-	const modal = await page.locator('#newImageModal');
-	expect(modal).toBeVisible();
+	await page.locator("button.open-modal").click();
+
+	await page.type("form.new-image-form .file-input", '../assets.100x400.png');
+
+	await page.locator("#newImageForm .save-image").click();
+
+	expect(request.failure().errorText).toBe(false);
 });
