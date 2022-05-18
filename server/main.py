@@ -1,9 +1,9 @@
 from typing import List, Optional
 
-from fastapi import FastAPI, File, Form, UploadFile
+from fastapi import FastAPI, File, Form, UploadFile, responses
 from fastapi.middleware.cors import CORSMiddleware
 
-import databases, aiofiles, sqlalchemy
+import databases, aiofiles, sqlalchemy, os
 
 from pydantic import BaseModel
 
@@ -65,6 +65,17 @@ async def shutdown():
 async def read_images():
     query = images.select()
     return await database.fetch_all(query)
+
+
+@app.get("/api/images/{id}")
+async def read_images(id: int):
+    query = images.select().where(images.c.id == id)
+    image = await database.fetch_one(query)
+    abs_fn = os.path.join("./assets", image.name)
+    if image.name.lower().endswith((".jpg", ".png", ".gif")) and os.path.isfile(abs_fn):
+        return responses.StreamingResponse(open(abs_fn, "rb"), media_type=image.mimetype)
+    else:
+        return {"error": "File not found"}
 
 
 @app.post("/api/images/", response_model=Image)
