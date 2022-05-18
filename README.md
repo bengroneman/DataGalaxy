@@ -60,6 +60,8 @@ npm install
 npm run dev
 ```
 **Building for production**
+I am using [playwright](https://playwright.dev/) for end-to-end testing (```npx playwright install```)
+
 ```bash
 npm run test
 ```
