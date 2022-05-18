@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import PreLoadImage from '../components/PreLoadImage.svelte';
-	import { env } from '../lib/env.js';
+	import env from '../lib/env.js';
 
 	let imagesAvailable = [];
 	let modalOpen = false;
