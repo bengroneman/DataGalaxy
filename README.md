@@ -39,6 +39,12 @@ source env/bin/activate
 ```bash
 pip install "fastapi[all]" sqlalchemy databases aiofiles aiosqlite uvicorn
 ```
+If you receive the following error just ensure you have wheel installed (```pip install wheel```)
+then rerun the command to ensure dependencies are met
+
+> ERROR: Failed building wheel for python-multipart
+
+Otherwise you can get the server up and running with:
 ```bash
 uvicorn main:app --reload
 ```
