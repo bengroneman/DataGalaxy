@@ -1,11 +1,10 @@
 from typing import List, Optional
 
-from fastapi import FastAPI, File, Form, UploadFile, responses
-from fastapi.middleware.cors import CORSMiddleware
-
 import databases, aiofiles, sqlalchemy, os
 
 from pydantic import BaseModel
+from fastapi import FastAPI, File, Form, UploadFile, responses
+from fastapi.middleware.cors import CORSMiddleware
 
 DATABASE_URL = "sqlite:///./core.db"
 
