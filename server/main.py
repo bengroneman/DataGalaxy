@@ -75,21 +75,30 @@ async def read_images(id: int):
     if image.name.lower().endswith((".jpg", ".png", ".gif")) and os.path.isfile(abs_fn):
         return responses.StreamingResponse(open(abs_fn, "rb"), media_type=image.mimetype)
     else:
-        return {"error": "File not found"}
+        return {"error": "File not found", "status": 404}
 
 
-@app.post("/api/images/", response_model=Image)
+@app.post("/api/images/")
 async def create_image(image: UploadFile = File(...)):
     if image is None:
-        return {"error": "No file uploaded"}
+        return { "error": "No file uploaded" }
 
     if not image.filename.lower().endswith((".jpg", ".png", ".gif")):
-        return {"error": "Only JPG, PNG and GIF files are allowed"}
+        return {"error": "Only JPG, PNG and GIF files are allowed", "status": 400}
 
     async with aiofiles.open(f"./assets/{image.filename}", "wb") as out_image:
+        try:
+            filesize = await os.path.getsize(f"./assets/{image.filename}")
+            if filesize > 1024 * 1024 * 10:
+                return {"error": "File size too large", "status": 400}
+        except OSError:
+            return {"error": "File not found", "status": 404}
         while content := await image.read(1024):
             await out_image.write(content)
 
     query = images.insert().values(name=image.filename, mimetype=image.content_type)
     last_record_id = await database.execute(query)
-    return {"id": last_record_id, "name": image.filename, "mimetype": image.content_type}
+    if last_record_id is None:
+        return {"error": "Failed to upload file", "status": 404}
+
+    return {"id": last_record_id, "name": image.filename, "mimetype": image.content_type, "status": 200}
