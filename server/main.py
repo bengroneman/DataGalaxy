@@ -40,7 +40,6 @@ origins = [
     'http://localhost:3000',
     'http://localhost',
     'https://elaborate-pastelito-70d2ac.netlify.app',
-    'http://elaborate-pastelito-70d2ac.netlify.app',
 ]
 
 app.add_middleware(

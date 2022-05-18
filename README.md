@@ -2,7 +2,7 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/de535978-4315-4d5d-99dd-f33db4bb6301/deploy-status)](https://app.netlify.com/sites/elaborate-pastelito-70d2ac/deploys)
 
 Welcome to my submission for the Fall 2022 Data Engineer Intern Challenge!
-I have created a simple web application that would allow users to add, share and apply filters to images uploaded.
+I have created a simple web application that enables users to add images to a repository and dynamically see other submissions.
 
 ## Client Requirements
 - Build an image repository
@@ -28,6 +28,8 @@ cd DataGalaxy
 cd server
 ```
 *I encourage the use of virtual environments, but feel free to manage your dependencies how you see fit*
+
+**Note:** I am using [virtualenv](https://virtualenv.pypa.io/en/latest/) here coupled with Python 3.8
 ```bash
 python3 -m venv env
 ```
@@ -35,7 +37,7 @@ python3 -m venv env
 source env/bin/activate 
 ```
 ```bash
-pip install pytest "fastapi[all]" python-multipart sqlalchemy databases aiofiles aiosqlite uvicornt 
+pip install "fastapi[all]" sqlalchemy databases aiofiles aiosqlite uvicorn
 ```
 ```bash
 uvicorn main:app --reload
