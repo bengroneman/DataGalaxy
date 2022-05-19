@@ -46,3 +46,16 @@ test('clicking the modal cancel button closes the modal', async ({ page }) => {
 		expect(await page.locator('#newImageForm')).toBe(null);
 	});
 });
+
+test('adding an image without selecting a category defaults to general', async ({ page }) => {
+	page.on('load', async () => {
+		await page.locator('button.open-modal').click();
+		await page.locator('label.input-file');
+		page.on('filechooser', async (fileChooser) => {
+			await fileChooser.setFiles('../assets/100x400.png');
+		});
+
+		await page.locator('#newImageForm .save-image').click();
+		expect(await page.evaluate(() => page.locator('#imageGrid figure:last-child > figcaption').innerText)).toBe('General');
+	});
+});
