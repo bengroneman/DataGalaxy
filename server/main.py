@@ -88,13 +88,16 @@ async def create_image(image: UploadFile = File(...), category: str = Form(...))
     if image is None:
         return { "error": "No file uploaded" }
 
-    if not image.filename.lower().endswith((".jpg", ".png", ".gif")):
-        return {"error": "Only JPG, PNG and GIF files are allowed", "status": 400}
+    if not image.filename.lower().endswith((".jpg", ".png", ".gif", ".jpeg")):
+        return {"error": "Only JPG, JPEG, PNG and GIF files are allowed", "status": 400}
 
-    filesize = os.path.getsize(f"./assets/{image.filename}")
+    try:
+        filesize = os.path.getsize(f"./assets/{image.filename}")
 
-    if filesize > 1024 * 1024 * 10:
-        return {"error": "File size too large", "status": 400}
+        if filesize > 1024 * 1024 * 10:
+            return {"error": "File size too large", "status": 400}
+    except OSError:
+        return {"error": "File not found", "status": 404}
 
     async with aiofiles.open(f"./assets/{image.filename}", "wb") as out_image:
         while content := await image.read(1024):

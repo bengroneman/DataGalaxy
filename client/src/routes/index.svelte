@@ -39,7 +39,9 @@
 		if (parsed_response.hasOwnProperty('error')) {
 			alert(parsed_response.error);
 		} else {
-			form.reset(true);
+			const input = document.querySelector('#image');
+			input.value = '';
+			window.location.reload(true);
 			alert('Image uploaded successfully');
 		}
 	}
@@ -131,7 +133,7 @@
 																/>
 															</label>
 														</div>
-														<p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+														<p class="text-xs text-gray-500">PNG, JPG, JPEG GIF up to 10MB</p>
 													</div>
 												</div>
 											</div>
@@ -207,11 +209,11 @@
 			Add Image
 		</button>
 	</div>
-	<div class="pt-12 mt-12">
-		<h2 class="text-2xl">Images</h2>
+	<div class="py-12 my-12">
+		<h2 class="text-2xl mb-12">Images</h2>
 		<div class="grid lg:grid-cols-6 xl:grid-cols-8 md:grid-cols-4 sm:grid-cols-2">
 			{#each imagesAvailable as image}
-				<PreLoadImage />
+				<PreLoadImage bind:image/>
 			{/each}
 		</div>
 	</div>
