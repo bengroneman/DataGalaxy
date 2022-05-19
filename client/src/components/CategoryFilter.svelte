@@ -6,7 +6,7 @@
 	// global variables
 	export let options = [];
 	export let label;
-	export let selectedOption = undefined;
+	export let selectedOption = 'General';
 	let searching = false;
 	// Search
 	$: filteredInOptions = selectedOption

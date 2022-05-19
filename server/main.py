@@ -5,6 +5,7 @@ import databases, aiofiles, sqlalchemy, os
 from pydantic import BaseModel
 from fastapi import FastAPI, File, Form, UploadFile, responses
 from fastapi.middleware.cors import CORSMiddleware
+from pathlib import Path
 
 DATABASE_URL = "sqlite:///./core.db"
 
@@ -84,29 +85,35 @@ async def read_images(id: int):
 
 @app.post("/api/images/")
 async def create_image(image: UploadFile = File(...), category: str = Form(...)):
-    print(category)
     if image is None:
-        return { "error": "No file uploaded" }
+        return {"error": "No file uploaded"}
 
-    if not image.filename.lower().endswith((".jpg", ".png", ".gif", ".jpeg")):
+    if category is None:
+        category = "General"
+
+    filepath = Path("./assets")
+    filesize = None
+
+    if not image.filename.lower().endswith((".jpg", ".png", ".gif")):
         return {"error": "Only JPG, JPEG, PNG and GIF files are allowed", "status": 400}
 
-    try:
-        filesize = os.path.getsize(f"./assets/{image.filename}")
-
-        if filesize > 1024 * 1024 * 10:
+    select_image = images.select().where(images.c.name == image.filename)
+    image_exists = await database.fetch_one(select_image)
+    if image_exists:
+        filesize = os.path.getsize(f"{filepath}/{image.filename}")
+        if filesize >= 1024 * 1024 * 10:
             return {"error": "File size too large", "status": 400}
-    except OSError:
-        return {"error": "File not found", "status": 404}
 
-    async with aiofiles.open(f"./assets/{image.filename}", "wb") as out_image:
+        return {"error": "File already exists", "status": 400}
+
+    async with aiofiles.open(f"{filepath}/{image.filename}", "wb") as out_image:
         while content := await image.read(1024):
             await out_image.write(content)
 
     query = images.insert().values(name=image.filename, mimetype=image.content_type, category=category, size=filesize)
     last_record_id = await database.execute(query)
     if last_record_id is None:
-        return {"error": "Failed to upload file", "status": 404}
+        return {"error": "Failed to insert file", "status": 400}
 
     return {
         "id": last_record_id,

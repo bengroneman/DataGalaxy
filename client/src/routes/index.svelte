@@ -7,12 +7,18 @@
 
 	let imagesAvailable = [];
 	let modalOpen = false;
+	let filename;
+	let loading = true;
 	const categories = ['Cats', 'Dogs', 'General', 'Stock', 'Projects', 'Technology'];
 	const BASE_URL = env.baseUrl;
 
-	$: selectedCategory = '';
+	$: selectedCategory = 'General';
 
 	onMount(async () => {
+		await fetchAllImages();
+	});
+
+	async function fetchAllImages() {
 		const response = await fetch(`${BASE_URL}api/images/`, {
 			method: 'GET',
 			headers: {
@@ -20,28 +26,32 @@
 			}
 		});
 		imagesAvailable = await response.json();
-	});
+		loading = false;
+	}
 
 	async function handleSubmit() {
+		loading = true;
 		event.preventDefault();
 		const form = this;
 		const data = new FormData(form);
+
 		if (document.querySelector('#image').value === '') {
 			alert('Please attach an image');
 			return;
 		}
-		console.log(data);
 		const response = await fetch(`${BASE_URL}api/images/`, {
 			method: 'POST',
 			body: data
 		});
+
 		const parsed_response = await response.json();
 		if (parsed_response.hasOwnProperty('error')) {
 			alert(parsed_response.error);
+			loading = false;
 		} else {
 			const input = document.querySelector('#image');
 			input.value = '';
-			window.location.reload(true);
+			await fetchAllImages();
 			alert('Image uploaded successfully');
 		}
 	}
@@ -123,17 +133,16 @@
 																for="image"
 																class="file-input relative cursor-pointer bg-white rounded-md font-medium text-orange-600 hover:text-orange-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-orange-500"
 															>
-																<span>Upload a file</span>
 																<input
 																	id="image"
 																	name="image"
 																	type="file"
 																	accept="image/*"
-																	class="sr-only"
+																	class="px-2"
 																/>
 															</label>
 														</div>
-														<p class="text-xs text-gray-500">PNG, JPG, JPEG GIF up to 10MB</p>
+														<p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
 													</div>
 												</div>
 											</div>
@@ -211,7 +220,7 @@
 	</div>
 	<div class="py-12 my-12">
 		<h2 class="text-2xl mb-12">Images</h2>
-		<div class="grid lg:grid-cols-6 xl:grid-cols-8 md:grid-cols-4 sm:grid-cols-2">
+		<div id="imageGrid" class="grid lg:grid-cols-6 xl:grid-cols-8 md:grid-cols-4 sm:grid-cols-2">
 			{#each imagesAvailable as image}
 				<PreLoadImage bind:image/>
 			{/each}
