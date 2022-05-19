@@ -56,6 +56,8 @@ test('adding an image without selecting a category defaults to general', async (
 		});
 
 		await page.locator('#newImageForm .save-image').click();
-		expect(await page.evaluate(() => page.locator('#imageGrid figure:last-child > figcaption').innerText)).toBe('General');
+		expect(
+			await page.evaluate(() => page.locator('#imageGrid figure:last-child > figcaption').innerText)
+		).toBe('General');
 	});
 });
