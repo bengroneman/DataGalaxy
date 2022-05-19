@@ -1,11 +1,16 @@
 <script>
 	import { onMount } from 'svelte';
 	import PreLoadImage from '../components/PreLoadImage.svelte';
+	import CategoryFilter from '../components/CategoryFilter.svelte';
+
 	import env from '../lib/env.js';
 
 	let imagesAvailable = [];
 	let modalOpen = false;
+	const categories = ['Cats', 'Dogs', 'General', 'Stock', 'Projects', 'Technology'];
 	const BASE_URL = env.baseUrl;
+
+	$: selectedCategory = '';
 
 	onMount(async () => {
 		const response = await fetch(`${BASE_URL}api/images/`, {
@@ -25,7 +30,7 @@
 			alert('Please attach an image');
 			return;
 		}
-		import.meta.env.MODE;
+		console.log(data);
 		const response = await fetch(`${BASE_URL}api/images/`, {
 			method: 'POST',
 			body: data
@@ -34,7 +39,7 @@
 		if (parsed_response.hasOwnProperty('error')) {
 			alert(parsed_response.error);
 		} else {
-			window.location.reload(true);
+			form.reset(true);
 			alert('Image uploaded successfully');
 		}
 	}
@@ -63,7 +68,7 @@
             To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         -->
 				<div
-					class="relative bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full sm:p-6"
+					class="bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full sm:p-6"
 				>
 					<div>
 						<div class="mt-3 text-center sm:mt-5">
@@ -73,13 +78,22 @@
 								id="newImageForm"
 								on:submit={handleSubmit}
 							>
+								<input type="hidden" name="category" bind:value={selectedCategory} />
 								<div class="space-y-8 divide-y divide-gray-200">
 									<div>
 										<div>
 											<h3 class="text-lg leading-6 font-medium text-gray-900">Add a new image</h3>
 											<p class="mt-1 text-sm text-gray-500">
-												This image will be displayd publicly so be careful what you share.
+												This image will be displayed publicly so be careful what you share.
 											</p>
+										</div>
+
+										<div class="divide-y divide-gray-200 h-full">
+											<CategoryFilter
+												label="Categories"
+												options={categories}
+												bind:selectedOption={selectedCategory}
+											/>
 										</div>
 
 										<div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
@@ -105,10 +119,16 @@
 														<div class="flex text-sm text-gray-600">
 															<label
 																for="image"
-																class="file-input relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+																class="file-input relative cursor-pointer bg-white rounded-md font-medium text-orange-600 hover:text-orange-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-orange-500"
 															>
 																<span>Upload a file</span>
-																<input id="image" name="image" type="file" class="sr-only" />
+																<input
+																	id="image"
+																	name="image"
+																	type="file"
+																	accept="image/*"
+																	class="sr-only"
+																/>
 															</label>
 														</div>
 														<p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
@@ -118,16 +138,17 @@
 										</div>
 									</div>
 								</div>
+
 								<div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
 									<button
 										type="submit"
-										class="save-image w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
+										class="save-image w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-orange-600 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 sm:col-start-2 sm:text-sm"
 										>Save</button
 									>
 									<button
 										type="button"
 										on:click={() => (modalOpen = false)}
-										class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
+										class="cancel-modal mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 sm:mt-0 sm:col-start-1 sm:text-sm"
 										>Cancel</button
 									>
 								</div>
@@ -167,7 +188,7 @@
 			type="button"
 			on:click={() => (modalOpen = true)}
 			id="newImageButton"
-			class="open-modal inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+			class="open-modal inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
 		>
 			<!-- Heroicon name: solid/plus -->
 			<svg
@@ -190,7 +211,7 @@
 		<h2 class="text-2xl">Images</h2>
 		<div class="grid lg:grid-cols-6 xl:grid-cols-8 md:grid-cols-4 sm:grid-cols-2">
 			{#each imagesAvailable as image}
-				<PreLoadImage {image} />
+				<PreLoadImage />
 			{/each}
 		</div>
 	</div>

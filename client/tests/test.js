@@ -38,3 +38,11 @@ test('adding a file over 10mb fails', async ({ page, request }) => {
 		expect(await request.response.status).toBe(400);
 	});
 });
+
+test('clicking the modal cancel button closes the modal', async ({ page }) => {
+	page.on('load', async () => {
+		await page.locator('button.open-modal').click();
+		await page.locator('#newImageForm .cancel-modal').click();
+		expect(await page.locator('#newImageForm')).toBe(null);
+	});
+});

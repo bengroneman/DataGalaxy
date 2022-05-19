@@ -18,6 +18,8 @@ images = sqlalchemy.Table(
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("name", sqlalchemy.String),
     sqlalchemy.Column("mimetype", sqlalchemy.String),
+    sqlalchemy.Column("category", sqlalchemy.String),
+    sqlalchemy.Column("size", sqlalchemy.Integer),
 )
 
 
@@ -31,6 +33,8 @@ class Image(BaseModel):
     id: int
     name: Optional[str] = None
     mimetype: Optional[str] = None
+    category: Optional[str] = None
+    size: Optional[int] = None
 
 
 app = FastAPI()
@@ -79,26 +83,33 @@ async def read_images(id: int):
 
 
 @app.post("/api/images/")
-async def create_image(image: UploadFile = File(...)):
+async def create_image(image: UploadFile = File(...), category: str = Form(...)):
+    print(category)
     if image is None:
         return { "error": "No file uploaded" }
 
     if not image.filename.lower().endswith((".jpg", ".png", ".gif")):
         return {"error": "Only JPG, PNG and GIF files are allowed", "status": 400}
 
+    filesize = os.path.getsize(f"./assets/{image.filename}")
+
+    if filesize > 1024 * 1024 * 10:
+        return {"error": "File size too large", "status": 400}
+
     async with aiofiles.open(f"./assets/{image.filename}", "wb") as out_image:
-        try:
-            filesize = await os.path.getsize(f"./assets/{image.filename}")
-            if filesize > 1024 * 1024 * 10:
-                return {"error": "File size too large", "status": 400}
-        except OSError:
-            return {"error": "File not found", "status": 404}
         while content := await image.read(1024):
             await out_image.write(content)
 
-    query = images.insert().values(name=image.filename, mimetype=image.content_type)
+    query = images.insert().values(name=image.filename, mimetype=image.content_type, category=category, size=filesize)
     last_record_id = await database.execute(query)
     if last_record_id is None:
         return {"error": "Failed to upload file", "status": 404}
 
-    return {"id": last_record_id, "name": image.filename, "mimetype": image.content_type, "status": 200}
+    return {
+        "id": last_record_id,
+        "name": image.filename,
+        "mimetype": image.content_type,
+        "category": category,
+        "size": filesize,
+        "status": 200
+    }
