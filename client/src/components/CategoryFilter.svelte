@@ -83,7 +83,7 @@
 					class="relative cursor-default select-none py-2 pl-8 pr-4 text-gray-600 hover:bg-gray-200 hover:text-gray-800"
 					id={'in-option-' + index}
 					role="option"
-					tabindex="-1"
+					tabindex="0"
 				>
 					<span class="block text-left pl-4 truncate">{option}</span>
 					<span class="absolute inset-y-0 left-0 flex items-center pl-1.5 text-sky-500">
