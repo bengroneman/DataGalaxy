@@ -24,8 +24,8 @@
 			alert('Please attach an image');
 			return;
 		}
-		import.meta.env.MODE
-		const baseUrl = env.mode === 'production' ? 'http://164.90.152.35/' : 'http://localhost:8000/';
+		import.meta.env.MODE;
+		const baseUrl = 'http://164.90.152.35/';
 		const response = await fetch(`${baseUrl}api/images/`, {
 			method: 'POST',
 			body: data
