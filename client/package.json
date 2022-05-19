@@ -28,7 +28,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"dotenv": "^16.0.1",
 		"svelte-preprocess": "^4.10.6"
 	}
 }

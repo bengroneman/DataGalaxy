@@ -25,7 +25,6 @@
 			reader.onload = () => resolve(reader.result);
 		});
 	};
-
 </script>
 
 {#await preload(image.id) then base64}
