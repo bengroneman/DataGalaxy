@@ -1,6 +1,9 @@
 <script>
+	import env from '../lib/env.js';
+
+	const BASE_URL = env.baseUrl;
 	const preload = async (id) => {
-		const res = await fetch('http://localhost:8000/api/images/' + id, {
+		const res = await fetch(`${BASE_URL}/api/images/` + id, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'

@@ -5,9 +5,10 @@
 
 	let imagesAvailable = [];
 	let modalOpen = false;
+	const BASE_URL = env.baseUrl;
 
 	onMount(async () => {
-		const response = await fetch('http://localhost:8000/api/images/', {
+		const response = await fetch(`${BASE_URL}api/images/`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'
@@ -25,8 +26,7 @@
 			return;
 		}
 		import.meta.env.MODE;
-		const baseUrl = 'http://164.90.152.35/';
-		const response = await fetch(`${baseUrl}api/images/`, {
+		const response = await fetch(`${BASE_URL}api/images/`, {
 			method: 'POST',
 			body: data
 		});
