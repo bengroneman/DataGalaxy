@@ -90,7 +90,8 @@
 						<CheckIcon />
 					</span>
 				</li>
-			{/each} {#if filteredOutOptions.length > 0}
+			{/each}
+			{#if filteredOutOptions.length > 0}
 				{#each filteredOutOptions as option, index}
 					<li
 						on:click={selectOption}
