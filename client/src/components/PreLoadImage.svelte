@@ -33,8 +33,8 @@
 			src={base64}
 			alt={image.name}
 			id={image.name + image.id}
-			class="object-cover shadow-lg rounded-lg mx-auto"
+			class="object-cover cursor-pointer shadow-lg rounded-lg mx-auto"
 		/>
-		<figcaption>{image.category}</figcaption>
+		<figcaption class="pt-2">{image.category}</figcaption>
 	</figure>
 {/await}

@@ -1,23 +1,30 @@
 <script>
+	// helpers
 	import { onMount } from 'svelte';
+	import env from '../lib/env.js';
+
+	// components
 	import PreLoadImage from '../components/PreLoadImage.svelte';
 	import Modal from '../components/Modal.svelte';
 	import NewImageForm from '../components/NewImageForm.svelte';
+	import LoadingIcon from '../components/icons/LoadingIcon.svelte';
 
-	import env from '../lib/env.js';
-
+	// globals
 	let imagesAvailable = [];
 	let modalOpen = false;
 	let filename;
 	let loading;
+
 	const BASE_URL = env.baseUrl;
 
-
+	// lifecycle hooks
 	onMount(async () => {
 		await fetchAllImages();
 	});
 
+	// methods
 	async function fetchAllImages() {
+		loading = true
 		const response = await fetch(`${BASE_URL}api/images/`, {
 			method: 'GET',
 			headers: {
@@ -27,12 +34,12 @@
 		imagesAvailable = await response.json();
 		loading = false;
 	}
-
 </script>
+
 
 {#if modalOpen}
 	<Modal>
-		<NewImageForm bind:loading fetchAllImages={() => fetchAllImages()}  bind:modalOpen />
+		<NewImageForm bind:loading fetchAllImages={() => fetchAllImages()} bind:modalOpen />
 	</Modal>
 {/if}
 
@@ -84,8 +91,14 @@
 	</div>
 	<div class="py-12 my-12">
 		<h2 class="text-2xl mb-12">Images</h2>
+		{#if loading}
+			<span class="flex justify-center">
+				<LoadingIcon />
+			</span>
+		{/if}
 		<div id="imageGrid" class="grid lg:grid-cols-6 xl:grid-cols-8 md:grid-cols-4 sm:grid-cols-2">
 			{#each imagesAvailable as image}
+
 				<PreLoadImage bind:image />
 			{/each}
 		</div>
