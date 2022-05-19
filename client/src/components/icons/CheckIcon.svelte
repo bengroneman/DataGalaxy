@@ -6,7 +6,7 @@
 <!-- Heroicon name: solid/check -->
 <svg
 	xmlns="http://www.w3.org/2000/svg"
-	class="standard-svg h-{height} h-{width}"
+	class="h-{height} h-{width}"
 	viewBox="0 0 20 20"
 	fill="currentColor"
 	aria-hidden="true"

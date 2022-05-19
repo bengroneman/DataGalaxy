@@ -5,15 +5,21 @@
 
 	// components
 	import PreLoadImage from '../components/PreLoadImage.svelte';
-	import Modal from '../components/Modal.svelte';
 	import NewImageForm from '../components/NewImageForm.svelte';
 	import LoadingIcon from '../components/icons/LoadingIcon.svelte';
+	import CategoryBreakdownChart from '../components/charts/CategoryBreakdownChart.svelte';
+	import Modal from '../components/Modal.svelte';
 
 	// globals
 	let imagesAvailable = [];
 	let modalOpen = false;
 	let filename;
 	let loading;
+	$: imageSizesByCategory = imagesAvailable.map((image) => [image.size, image.category]);
+	$: uniqueCategories = () => {
+		let categories = imagesAvailable.map((image) => image.category);
+		return [...new Set(categories)];
+	}
 
 	const BASE_URL = env.baseUrl;
 
@@ -24,7 +30,7 @@
 
 	// methods
 	async function fetchAllImages() {
-		loading = true
+		loading = true;
 		const response = await fetch(`${BASE_URL}api/images/`, {
 			method: 'GET',
 			headers: {
@@ -34,12 +40,15 @@
 		imagesAvailable = await response.json();
 		loading = false;
 	}
+	const setNewImageModalOn = (imgId) => {
+		modalOpen = true;
+		filename = imagesAvailable.find((img) => img.id === imgId).filename;
+	};
 </script>
 
-
 {#if modalOpen}
-	<Modal>
-		<NewImageForm bind:loading fetchAllImages={() => fetchAllImages()} bind:modalOpen />
+	<Modal on:close={() => (modalOpen = false)}>
+		<NewImageForm bind:loading fetchAllImages={() => fetchAllImages()} />
 	</Modal>
 {/if}
 
@@ -98,9 +107,13 @@
 		{/if}
 		<div id="imageGrid" class="grid lg:grid-cols-6 xl:grid-cols-8 md:grid-cols-4 sm:grid-cols-2">
 			{#each imagesAvailable as image}
-
 				<PreLoadImage bind:image />
 			{/each}
+		</div>
+	</div>
+	<div class="py-12 my-12">
+		<h2 class="text-2xl mb-12 text-orange-400">Data breakdown</h2>
+		<div class="grid lg:grid-cols-2 sm:grid-cols-1">
 		</div>
 	</div>
 </div>
