@@ -47,6 +47,7 @@ Otherwise you can get the server up and running with:
 uvicorn main:app --reload
 ```
 ### Client setup
+**Note:** leave the server running - switch to another terminal to run the client
 ```bash
 cd ../client
 ```
