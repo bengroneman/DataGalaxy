@@ -13,6 +13,32 @@ test('adding a PNG is successful', async ({ page, request }) => {
 	});
 });
 
+test('adding a JPG is successful', async ({ page, request }) => {
+	page.on('load', async () => {
+		await page.locator('button.open-modal').click();
+		await page.locator('label.input-file');
+		page.on('filechooser', async (fileChooser) => {
+			await fileChooser.setFiles('../assets/Donut_May_Gately-profile-edit.JPG');
+		});
+
+		await page.locator('#newImageForm .save-image').click();
+		expect(await request.response.status).toBe(200);
+	});
+});
+
+test('adding a GIF is successful', async ({ page, request }) => {
+	page.on('load', async () => {
+		await page.locator('button.open-modal').click();
+		await page.locator('label.input-file');
+		page.on('filechooser', async (fileChooser) => {
+			await fileChooser.setFiles('../assets/Beargrammer.gif');
+		});
+
+		await page.locator('#newImageForm .save-image').click();
+		expect(await request.response.status).toBe(200);
+	});
+});
+
 test('adding a PDF fails', async ({ page, request }) => {
 	page.on('load', async () => {
 		await page.locator('button.open-modal').click();
