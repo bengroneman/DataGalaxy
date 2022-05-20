@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 import databases, aiofiles, sqlalchemy, os
+from sqlalchemy import func
 
 from pydantic import BaseModel
 from fastapi import FastAPI, File, Form, UploadFile, responses

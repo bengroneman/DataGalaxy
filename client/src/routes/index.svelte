@@ -130,7 +130,6 @@
 		</div>
 	</div>
 	<div class="py-12 my-12">
-		<h2 class="text-2xl mb-12 text-orange-400">Data breakdown</h2>
 		<div class="grid lg:grid-cols-2 sm:grid-cols-1" />
 	</div>
 </div>
