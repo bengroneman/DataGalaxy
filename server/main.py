@@ -45,7 +45,7 @@ origins = [
     'http://localhost:8000',
     'http://localhost:3000',
     'http://localhost',
-    'https://elaborate-pastelito-70d2ac.netlify.app',
+    'http://164.90.152.35:4081',
 ]
 
 app.add_middleware(

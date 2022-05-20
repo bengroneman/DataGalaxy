@@ -14,7 +14,6 @@
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
-<div class="fixed t-0 w-full h-full bg-gray-50" />
 <div
 	id="newImageModal"
 	class="relative z-10"
