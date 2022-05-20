@@ -4,7 +4,6 @@
 	const BASE_URL = env.baseUrl;
 	export let image = {
 		name: 'Random image',
-		src: 'https://picsum.photos/200/300/?random',
 		alt: 'Random image',
 		id: ''
 	};
@@ -28,11 +27,11 @@
 </script>
 
 {#await preload(image.id) then base64}
-	<figure class="aspect-square w-full">
+	<figure class="aspect-auto w-full">
 		<img
 			src={base64}
 			alt={image.name}
-			id={image.name + image.id}
+			id={image.name + '-' + image.id}
 			class="object-cover cursor-pointer shadow-lg rounded-lg mx-auto"
 		/>
 		<figcaption class="pt-2">{image.category}</figcaption>

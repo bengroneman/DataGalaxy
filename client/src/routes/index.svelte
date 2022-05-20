@@ -12,16 +12,19 @@
 
 	// globals
 	let imagesAvailable = [];
-	let modalOpen = false;
-	let filename;
+	let newImageModal = false;
+	let imageModal = false;
+
+	let selectedImage;
 	let loading;
+
+	const BASE_URL = env.baseUrl;
+
 	$: imageSizesByCategory = imagesAvailable.map((image) => [image.size, image.category]);
 	$: uniqueCategories = () => {
 		let categories = imagesAvailable.map((image) => image.category);
 		return [...new Set(categories)];
-	}
-
-	const BASE_URL = env.baseUrl;
+	};
 
 	// lifecycle hooks
 	onMount(async () => {
@@ -40,18 +43,29 @@
 		imagesAvailable = await response.json();
 		loading = false;
 	}
-	const setNewImageModalOn = (imgId) => {
-		modalOpen = true;
-		filename = imagesAvailable.find((img) => img.id === imgId).filename;
-	};
+	function selectImage() {
+		const _id = String(event.srcElement.id).split('-').pop(),
+			image = imagesAvailable.filter((image) => image.id === Number(_id))[0];
+		console.log(image);
+		image['src'] = event.srcElement.src;
+		selectedImage = image;
+		imageModal = true;
+	}
 </script>
 
-{#if modalOpen}
-	<Modal on:close={() => (modalOpen = false)}>
+{#if newImageModal}
+	<Modal on:close={() => (newImageModal = false)}>
 		<NewImageForm bind:loading fetchAllImages={() => fetchAllImages()} />
 	</Modal>
 {/if}
 
+{#if imageModal}
+	<Modal on:close={() => (imageModal = false)}>
+		{#if selectedImage.hasOwnProperty('src')}
+			<PreLoadImage bind:image={selectedImage} />
+		{/if}
+	</Modal>
+{/if}
 <div class="text-center mt-12 pt-12">
 	<svg
 		class="mx-auto h-12 w-12 text-gray-400"
@@ -77,7 +91,7 @@
 	<div class="mt-6">
 		<button
 			type="button"
-			on:click={() => (modalOpen = true)}
+			on:click={() => (newImageModal = true)}
 			id="newImageButton"
 			class="open-modal inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
 		>
@@ -105,7 +119,11 @@
 				<LoadingIcon />
 			</span>
 		{/if}
-		<div id="imageGrid" class="grid lg:grid-cols-6 xl:grid-cols-8 md:grid-cols-4 sm:grid-cols-2">
+		<div
+			on:click={selectImage}
+			id="imageGrid"
+			class="grid lg:grid-cols-6 xl:grid-cols-8 md:grid-cols-4 sm:grid-cols-2"
+		>
 			{#each imagesAvailable as image}
 				<PreLoadImage bind:image />
 			{/each}
@@ -113,7 +131,6 @@
 	</div>
 	<div class="py-12 my-12">
 		<h2 class="text-2xl mb-12 text-orange-400">Data breakdown</h2>
-		<div class="grid lg:grid-cols-2 sm:grid-cols-1">
-		</div>
+		<div class="grid lg:grid-cols-2 sm:grid-cols-1" />
 	</div>
 </div>
