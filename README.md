@@ -1,5 +1,4 @@
 # Data Engineer Intern Fall 2022 - Shopify Challenge
-[![Netlify Status](https://api.netlify.com/api/v1/badges/de535978-4315-4d5d-99dd-f33db4bb6301/deploy-status)](https://app.netlify.com/sites/elaborate-pastelito-70d2ac/deploys)
 
 Welcome to my submission for the Fall 2022 Data Engineer Intern Challenge!
 I have created a simple web application that enables users to add images to a repository and dynamically see other submissions.
@@ -10,10 +9,9 @@ I have created a simple web application that enables users to add images to a re
 - Images populate the homepage dynamically
 
 ## Production build
-- Frontend is hosted on Netlify
-    - url: [Image Repository Client](https://elaborate-pastelito-70d2ac.netlify.app/)
-- Backend is hosted on Digital Ocean
-    - url: [API Docs](http://164.90.152.35:4080/docs)
+- Production is being hosted on a Digital Ocean server
+    - client: [Image Repository Client](http://164.90.152.35:4081/)
+    - server: [API Docs](http://164.90.152.35:4080/docs)
 
 ## Getting started
 **Note:** You will need to have Node.js >= v16, and Python >= 3.5 to run this project
