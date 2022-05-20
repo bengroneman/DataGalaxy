@@ -70,4 +70,5 @@ npm run build && npm run preview
 ## Roadmap
 - Add a search feature
 - Add a filter feature
-- Add a category to the image submission form
+- ~~Add a category to the image submission form~~
+- Add charts to show a breakdown of size / category
